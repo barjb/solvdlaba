@@ -23,22 +23,27 @@ function isBigger(s1, s2) {
     return false;
 }
 
+function stringToReversedArray(e) {
+    return e.split("").reverse();
+}
+
+function orderNumbers(s1, s2) {
+    if (isBigger(s1, s2)) {
+        return [s1, s2];
+    } else {
+        return [s2, s1];
+    }
+}
+
 function plus(s1, s2) {
     if (!isString(s1) || !isString(s2)) return "";
     if (!isDigitsOnly(s1) || !isDigitsOnly(s2)) return "";
 
     let carry = 0;
-    let longer;
-    let shorter;
-    if (s1.length > s2.length) {
-        longer = s1.split("").reverse();
-        shorter = s2.split("").reverse();
-    } else {
-        longer = s2.split("").reverse();
-        shorter = s1.split("").reverse();
-    }
-    let result = longer.map((value, index) => {
-        let elemSum = +value + (+shorter[index] || 0) + carry;
+    let [bigger, smaller] = orderNumbers(s1, s2).map(stringToReversedArray);
+
+    let result = bigger.map((value, index) => {
+        let elemSum = +value + (+smaller[index] || 0) + carry;
         carry = Math.floor(elemSum / 10);
         return elemSum % 10;
     });
@@ -49,20 +54,13 @@ function plus(s1, s2) {
 function minus(s1, s2) {
     if (!isString(s1) || !isString(s2)) return "";
     if (!isDigitsOnly(s1) || !isDigitsOnly(s2)) return "";
+    if (s1 === "0") return "-1";
 
     let carry = 0;
-    let longer;
-    let shorter;
-    if (s1 === "0") return "-1";
-    if (s1.length >= s2.length) {
-        longer = s1.split("").reverse();
-        shorter = s2.split("").reverse();
-    } else {
-        longer = s2.split("").reverse();
-        shorter = s1.split("").reverse();
-    }
-    let result = longer.map((value, index) => {
-        let elemSum = +value - (+shorter[index] || 0) - carry;
+    let [bigger, smaller] = orderNumbers(s1, s2).map(stringToReversedArray);
+
+    let result = bigger.map((value, index) => {
+        let elemSum = +value - (+smaller[index] || 0) - carry;
         if (elemSum < 0) {
             elemSum += 10;
             carry = 1;
@@ -74,7 +72,7 @@ function minus(s1, s2) {
     while (result[result.length - 1] === 0) {
         result.pop();
     }
-    return Number(result.reverse().join("")).toString();
+    return result.reverse().join("");
 }
 
 function multiply(s1, s2) {
@@ -92,9 +90,10 @@ function multiply(s1, s2) {
 function divide(s1, s2) {
     if (!isString(s1) || !isString(s2)) return "";
     if (!isDigitsOnly(s1) || !isDigitsOnly(s2)) return "";
+
     let result = "0";
 
-    while (isPositive(s1)) {
+    while (isBigger(s1, s2)) {
         s1 = minus(s1, s2);
         result = plus(result, "1");
     }
@@ -104,19 +103,18 @@ function divide(s1, s2) {
 let n1 = "4545454545454545";
 let n2 = "159159357357258456";
 
-// console.log(plus(n1, n2));
+console.log(plus(n1, n2));
 //expected  163 704 811 902 713 001
 //got       163 704 811 902 713 001
 
-// console.log(minus(n1, n2));
+console.log(minus(n1, n2));
 //expected  154 613 902 811 803 911
-//got       154 613 902 811 803 900
-//                        ---->  :(
+//got       154 613 902 811 803 911
 
-// console.log(multiply(n1, "1234"));
+console.log(multiply(n1, "1234"));
 //expected  5609090909090908530
 //got       5609090909090908530
 
 console.log(divide(n2, n1));
-//expected  35,01...
-//got       infinite loop :(
+//expected  35      division results are integers in this task
+//got       35
