@@ -13,14 +13,14 @@ function isDigitsOnly(s) {
     return [...s].every((c) => "0123456789".includes(c));
 }
 
-function isBigger(s1, s2) {
+function isNotSmaller(s1, s2) {
     if (s1.length > s2.length) return true;
     if (s1.length < s2.length) return false;
     for (let i = 0; i < s1.length; i++) {
         if (s1[i] > s2[i]) return true;
         if (s2[i] > s1[i]) return false;
     }
-    return false;
+    return true;
 }
 
 function stringToReversedArray(e) {
@@ -28,7 +28,7 @@ function stringToReversedArray(e) {
 }
 
 function orderNumbers(s1, s2) {
-    if (isBigger(s1, s2)) {
+    if (isNotSmaller(s1, s2)) {
         return [s1, s2];
     } else {
         return [s2, s1];
@@ -93,7 +93,7 @@ function divide(s1, s2) {
 
     let result = "0";
 
-    while (isBigger(s1, s2)) {
+    while (isNotSmaller(s1, s2)) {
         s1 = minus(s1, s2);
         result = plus(result, "1");
     }
@@ -116,5 +116,9 @@ console.log(multiply(n1, "1234"));
 //got       5609090909090908530
 
 console.log(divide(n2, n1));
-//expected  35      division results are integers in this task
+//expected  35
 //got       35
+
+console.log(divide(n2, n2));
+// expected 1
+// got      1
