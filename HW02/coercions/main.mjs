@@ -1,7 +1,6 @@
 export function addValues(arg1, arg2) {
     const convertible = new Set(["boolean", "string", "number", "object"]);
     let result = 0;
-
     if (typeof arg1 === "symbol" || typeof arg2 === "symbol") {
         throw TypeError("One of the arguments is 'symbol' type.");
     }
@@ -27,23 +26,6 @@ export function addValues(arg1, arg2) {
     return result;
 }
 
-function replacer(key, value) {
-    if (value instanceof Map) {
-        return {
-            dataType: "Map",
-            value: [...value],
-        };
-    }
-    if (value instanceof Set) {
-        return {
-            dataType: "Set",
-            value: [...value],
-        };
-    } else {
-        return value;
-    }
-}
-
 export function stringifyValue(arg) {
     const convertible = new Set([
         "string",
@@ -54,19 +36,13 @@ export function stringifyValue(arg) {
         "symbol",
     ]);
 
-    if (convertible.has(typeof arg)) {
-        return String(arg);
-    }
-    if (arg === null) {
+    if (convertible.has(typeof arg) || arg === null) {
         return String(arg);
     }
     if (typeof arg === "object" && arg !== null) {
-        if (arg instanceof Map || Set) {
-            return JSON.stringify(arg, replacer);
-        } else {
-            return JSON.stringify(arg);
-        }
+        return JSON.stringify(arg);
     }
+    return;
 }
 
 export function invertBoolean(arg) {
