@@ -1,5 +1,5 @@
 export function addValues(arg1, arg2) {
-    const convertible = new Set(["boolean", "string", "number", "object"]);
+    const convertible = new Set(["boolean", "string", "number"]);
     let result = 0;
     if (typeof arg1 === "symbol" || typeof arg2 === "symbol") {
         throw TypeError("One of the arguments is 'symbol' type.");
