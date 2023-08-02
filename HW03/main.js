@@ -3,12 +3,20 @@ function calculateDiscountedPrice(products, discount) {
         throw TypeError(`Argument producss is not an instance of an Array`);
     if (discount < 0 || discount > 100)
         throw Error(`Argument discount is not in range <0,100>`);
-    return products.map((elem) => (elem * (100 - discount)) / 100);
+    return products.map((elem) => {
+        return {
+            name: elem.name,
+            price: (elem.price * (100 - discount)) / 100,
+        };
+    });
 }
 function calculateTotalPrice(products) {
     if (!Array.isArray(products))
         throw TypeError(`Argument producss is not an instance of an Array`);
-    return products.reduce((accumulator, current) => accumulator + current, 0);
+    return products.reduce(
+        (accumulator, current) => accumulator + current.price,
+        0
+    );
 }
 
 function getFullName(person) {
@@ -16,6 +24,7 @@ function getFullName(person) {
 }
 function filterUniqueWords(text) {
     return text
+        .toLowerCase()
         .split(" ")
         .filter((value, index, self) => self.indexOf(value) === index)
         .sort((a, b) => a.localeCompare(b));
@@ -81,11 +90,22 @@ function fibonacciGenerator() {
     };
 }
 
-// const arr = [10, 20, 30, 40, 50];
-// const discount = 5;
 // try {
-//     console.log(calculateDiscountedPrice(arr, discount));
-//     console.log(calculateTotalPrice(arr));
+//     console.log(
+//         calculateTotalPrice([
+//             { name: "potato", price: 100 },
+//             { name: "potato", price: 100 },
+//         ])
+//     );
+//     console.log(
+//         calculateDiscountedPrice(
+//             [
+//                 { name: "potato", price: 100 },
+//                 { name: "potato", price: 100 },
+//             ],
+//             15
+//         )
+//     );
 // } catch (e) {
 //     console.log(e);
 // }
@@ -95,6 +115,12 @@ function fibonacciGenerator() {
 
 // const text = "a ab abb abc abc abb hi hi hi hey hey he hello hel hel";
 // console.log(filterUniqueWords(text));
+
+// console.log(
+//     filterUniqueWords(
+//         "hOw How HOw hoW To to make MaKe my My SalaRy salary bigger bigGER ?"
+//     )
+// );
 
 // const students = [
 //     { name: "a", grades: 1 },
