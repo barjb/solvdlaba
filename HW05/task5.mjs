@@ -16,7 +16,6 @@ function measureArrayPerformance(fn, arr, cb) {
     return (end - start) / 1000;
 }
 
-// 1. filter performance
 const arrayOfObjects = [];
 for (let i = 0; i < 5000; i++) {
     const obj = { a: i };
@@ -50,7 +49,7 @@ console.log(`${time}s`);
 // ===== TEST 2 =====
 // for (let i = 0; i < 10000; i++) { ... }
 // time achieved 5.424s
-// items  ~19901 more items
+// items:  ~19901 more items
 
 // Array.prototype.filter
 
@@ -61,10 +60,10 @@ console.log(`${time}s`);
 // ===== TEST 2 =====
 // for (let i = 0; i < 10000; i++) { ... }
 // time achieved 0.005s
-// items ~39900 more items
+// items: ~39900 more items
 
 // NOTE
 // Array.prototype.filter doesn't filter out objects having identical properties.
 // In my current solution time taken to check if object is proportional to the amount of unique elements in the set.
-// ATM I have O(N*M) time complexity, where  N = amount of objects in the initial array, M = amount of unique objects in the resulting array.
+// ATM customFilterUnique achieves O(N*M) time complexity, where N = amount of objects in the initial array, M = amount of unique objects in the resulting array.
 // Whereas Array.prototype.filter is O(N).

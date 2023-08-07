@@ -75,7 +75,7 @@ function getArrayUnion(arr1, arr2) {
 }
 
 // I assume arr1 and arr2 don't have duplicates
-const arr1 = [1, 2, 3, [1, 2], { a: 1 }];
+const arr1 = [1, 2, 3, [1, 2], { a: 1 }, { b: 2 }];
 const arr2 = [1, 2, [1, 2], [1], { a: 1 }, { a: 2 }, { b: 1 }];
 console.log(getArrayIntersection(arr1, arr2));
 console.log(getArrayUnion(arr1, arr2));

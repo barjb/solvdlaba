@@ -23,7 +23,6 @@ function* chunkArrayOptimized(arr, chunksize) {
     // In order to optimize memory usage I could append chunks in smaller chunks when function gets called with larger 'chunksize' paremeter.
     // for example chunkArrayOptimized(someBigArray,10000000000)
     // But I think this is not the crux of the problem.
-    // I chose to optimize function using generators, please let me know if this thought process is correct.
 
     let currentIndex = 0;
     while (currentIndex < arr.length) {
