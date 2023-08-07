@@ -8,29 +8,43 @@
 //  The callback function should log the property name and the action (get or set) performed on the object.
 
 let obj = Object.create(Object.prototype, {
-    firstName: { value: "John", enumerable: true, writable: false },
-    lastName: { value: "Doe", enumerable: true, writable: false },
-    age: { value: 30, enumerable: true, writable: false },
+    firstName: {
+        value: "John",
+        enumerable: true,
+        writable: false,
+        configurable: true,
+    },
+    lastName: {
+        value: "Doe",
+        enumerable: true,
+        writable: false,
+        configurable: true,
+    },
+    age: { value: 30, enumerable: true, writable: false, configurable: false },
     email: {
         value: "john.doe@example.com",
         enumerable: true,
         writable: false,
+        configurable: true,
     },
 });
 Object.defineProperty(obj, "updateInfo", {
-    value: (newInfo) => {
-        Object.defineProperty(obj, "newInfo", {
-            value: newInfo,
-            enumerable: true,
-            writable: false,
-        });
+    value: (info) => {
+        for (property in info) {
+            if (obj.hasOwnProperty(property)) {
+                Object.defineProperty(obj, property, { writable: true });
+                obj[property] = info[property];
+                Object.defineProperty(obj, property, { writable: false });
+            }
+        }
     },
 });
 
 Object.defineProperty(obj, "address", {
-    value: undefined,
+    value: null,
     enumerable: false,
     configurable: false,
+    writable: true,
 });
 
 function observeObject(obj, cb) {

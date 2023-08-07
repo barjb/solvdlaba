@@ -10,7 +10,6 @@ function createImmutableObject(obj) {
     if (obj === null || typeof obj !== "object") {
         return obj;
     }
-
     let immutable;
     if (Array.isArray(obj)) {
         immutable = [];
@@ -66,7 +65,7 @@ let obj = Object.create(Object.prototype, {
         writable: false,
         configurable: true,
     },
-    age: { value: 30, enumerable: true, writable: false, configurable: true },
+    age: { value: 30, enumerable: true, writable: false, configurable: false },
     email: {
         value: "john.doe@example.com",
         enumerable: true,
@@ -87,7 +86,7 @@ Object.defineProperty(obj, "updateInfo", {
 });
 
 Object.defineProperty(obj, "address", {
-    value: undefined,
+    value: null,
     enumerable: false,
     configurable: false,
     writable: true,

@@ -35,15 +35,6 @@ Object.defineProperties(obj, {
     },
 });
 
-console.log(obj);
-obj.name = "name";
-obj.price = 1;
-obj.quantity = 1;
-
-console.log(obj.name);
-console.log(obj.price);
-console.log(obj.quantity);
-
 function getTotalPrice(obj) {
     return (
         +Object.getOwnPropertyDescriptor(obj, "price").value *
@@ -60,6 +51,15 @@ function deleteNonConfigurable(object, propertyName) {
         throw Error(`Can't delete non-configurable property "${propertyName}"`);
     }
 }
+
+console.log(obj);
+obj.name = "name";
+obj.price = 1;
+obj.quantity = 1;
+
+console.log(obj.name);
+console.log(obj.price);
+console.log(obj.quantity);
 
 console.log("getTotalPrice(), ", getTotalPrice(obj));
 

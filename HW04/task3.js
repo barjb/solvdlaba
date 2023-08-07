@@ -31,10 +31,8 @@ let obj = Object.create(Object.prototype, {
     transfer: {
         value: function (obj, amount) {
             if (amount <= this._balance) {
-                console.log("tb  ", this._balance);
                 this._balance -= amount;
                 obj.balance = obj.balance + amount;
-                console.log("tb2 ", this._balance, obj.balance);
             }
         },
     },
@@ -61,15 +59,14 @@ let obj2 = Object.create(Object.prototype, {
     transfer: {
         value: function (obj, amount) {
             if (amount <= this._balance) {
-                console.log("tb  ", this._balance);
                 this.balance = this.balance - amount;
                 obj.balance = obj.balance - amount;
-                console.log("tb2 ", this._balance, obj.balance);
             }
         },
     },
 });
 
 console.log(`obj1 ${obj.formattedBalance}`);
-obj.transfer(obj2, 100);
-console.log(`${obj.formattedBalance} ${obj2.formattedBalance}`);
+console.log(`obj2 ${obj2.formattedBalance}`);
+obj.transfer(obj2, 500);
+console.log(`obj1 ${obj.formattedBalance} obj2 ${obj2.formattedBalance}`);
