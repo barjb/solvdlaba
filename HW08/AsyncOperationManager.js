@@ -1,28 +1,33 @@
 class AsyncOperationManager {
     simulateAsyncOperation(delay) {
-        setTimeout(
-            () => console.log(`SetTimeout result timeout: ${delay}`),
-            delay
-        );
+        setTimeout(() => {
+            setImmediate(() =>
+                console.log("This message shows after SetTimeout")
+            );
+            console.log(`SetTimeout result timeout: ${delay}`);
+        }, delay);
     }
     scheduleImmediate() {
-        setImmediate(() => console.log("setImmediate"));
+        setImmediate(() => {
+            setTimeout(() =>
+                console.log("This message shows after setImmediate")
+            );
+            console.log("Immediate task executed");
+        });
     }
     nextTickMethod() {
-        process.nextTick(() => console.log("process.nextTick"));
+        process.nextTick(() => console.log("Microtask executed immediately"));
     }
 }
 
 const manager = new AsyncOperationManager();
 
-process.nextTick(() => console.log("OUT1"));
-manager.simulateAsyncOperation(0);
-process.nextTick(() => console.log("OUT2"));
-manager.nextTickMethod();
-process.nextTick(() => console.log("OUT3"));
+manager.simulateAsyncOperation(200);
 manager.scheduleImmediate();
-process.nextTick(() => console.log("OUT4"));
+manager.nextTickMethod();
 console.log("LAST LINE");
+
+// Description below shows execution of previous commit
 
 /*
 Event loop description.
