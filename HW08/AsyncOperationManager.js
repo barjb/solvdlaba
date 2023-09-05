@@ -1,18 +1,18 @@
 class AsyncOperationManager {
     simulateAsyncOperation(delay) {
         setTimeout(() => {
-            setImmediate(() =>
+            console.log(`SetTimeout result timeout: ${delay}`);
+            process.nextTick(() =>
                 console.log("This message shows after SetTimeout")
             );
-            console.log(`SetTimeout result timeout: ${delay}`);
         }, delay);
     }
     scheduleImmediate() {
         setImmediate(() => {
-            setTimeout(() =>
+            console.log("Immediate task executed");
+            process.nextTick(() =>
                 console.log("This message shows after setImmediate")
             );
-            console.log("Immediate task executed");
         });
     }
     nextTickMethod() {
@@ -59,48 +59,61 @@ etc.
 
 Result:
     LAST LINE
-    OUT1
-    OUT2
-    process.nextTick
-    OUT3
-    OUT4
-    SetTimeout result timeout: 0
-    setImmediate
+    Microtask executed immediately
+    Immediate task executed
+    This message shows after setImmediate
+    SetTimeout result timeout: 200
+    This message shows after SetTimeout
 
 Explaination:
     LAST LINE gets printed first as it is a part of synchronous flow.
 
-    
+    Timers are placed on the timer heap. During each iteration of the event loop, it checks if timer's delay has elapsed.  If so, it places its callback onto the timers queue. 
+
+    TimerHeap = [
+        setTimeout(() => {
+            console.log(`SetTimeout result timeout: ${delay}`);
+            process.nextTick(() =>
+                console.log("This message shows after SetTimeout")
+            );
+        }, delay);
+    ]
+
     Firstly all tasks are put onto queues top-to bottom:
-    0/1 = [() => console.log("OUT1"), () => console.log("OUT2"), () => console.log("process.nextTick"), () => console.log("OUT3"), () => console.log("OUT4")]
-    1 = [() => console.log(`SetTimeout result timeout: ${delay}`)]
-    3 = [() => console.log("setImmediate")]
+    0/1 = [() => console.log("Microtask executed immediately")]
+    1 = []
+    3 = [() => {
+            console.log("Immediate task executed");
+            process.nextTick(() =>
+                console.log("This message shows after setImmediate")
+            );
+    }]
 
 ================ LOOP PHASE 1 ================
 
     0/1 is not empty, so it gets resolved before 1.
         
-        OUT1
-        OUT2
-        process.nextTick
-        OUT3
-        OUT4
+    console.log("Microtask executed immediately")
 
-    5 lines are printed.
 
     Current state:
-    0/1 = []
-    1 = [() => console.log(`SetTimeout result timeout: ${delay}`)]
-    3 = [() => console.log("setImmediate")]
+    TimerHeap = [
+        setTimeout(() => {
+            console.log(`SetTimeout result timeout: ${delay}`);
+            process.nextTick(() =>
+                console.log("This message shows after SetTimeout")
+            );
+        }, delay);
+    ]
 
-    Next 1 gets emptied.
-
-        SetTimeout result timeout: 0
-    
-    Current state:
     0/1 = []
     1 = []
-    3 = [() => console.log("setImmediate")]
+    3 = [() => {
+            console.log("Immediate task executed");
+            process.nextTick(() =>
+                console.log("This message shows after setImmediate")
+            );
+    }]
 
 ================ LOOP PHASE 2 ================
 
@@ -108,16 +121,66 @@ We don't process any I/O tasks.
 
 ================ LOOP PHASE 3 ================
     
-    Lastly 3 gets emptied
-    
-        setImmediate
+    3 gets emptied.
+    console.log("Immediate task executed");
 
     Current state:
+    TimerHeap = [
+        setTimeout(() => {
+            console.log(`SetTimeout result timeout: ${delay}`);
+            process.nextTick(() =>
+                console.log("This message shows after SetTimeout")
+            );
+        }, delay);
+    ]
+
+    0/1 = [console.log("This message shows after setImmediate")]
+    1 = []
+    3 = []
+
+    0/1 is not empty, so program prints
+    console.log("This message shows after setImmediate")
+
+    Current state:
+        TimerHeap = [
+        setTimeout(() => {
+            console.log(`SetTimeout result timeout: ${delay}`);
+            process.nextTick(() =>
+                console.log("This message shows after SetTimeout")
+            );
+        }, delay);
+    ]
+
     0/1 = []
     1 = []
     3 = []
 
-    There are no more tasks. Program quits.
+================ LOOP PHASE x ================
+
+    Time elapses callback gets put on the 1 queue.
+
+    Current state:
+    0/1 = []
+    1 = [() => {
+            console.log(`SetTimeout result timeout: ${delay}`);
+            process.nextTick(() =>
+                console.log("This message shows after SetTimeout")
+            );
+        }]
+    3 = []
+
+...
+================ LOOP PHASE 1 ================
+
+    console.log(`SetTimeout result timeout: ${delay}`);
+
+    Current state:
+    0/1 = [console.log("This message shows after SetTimeout")]
+    1 = []
+    3 = []
+
+    0/1 gets emptied, program quits
+    console.log("This message shows after SetTimeout")
 */
 
 // Role of microtask and setImmediate
