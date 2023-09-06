@@ -1,16 +1,18 @@
 function promiseAll(array) {
     let result = [];
+    let finished = 0;
     return new Promise((resolve, reject) => {
-        array.forEach((promise) => {
-            promise
+        for (const [index, promise] of array.entries()) {
+            Promise.resolve(promise)
                 .then((value) => {
-                    result.push(value);
+                    result[index] = value;
+                    finished++;
+                    if (finished === array.length) resolve(result);
                 })
                 .catch((error) => {
                     reject(error);
                 });
-        });
-        resolve(result);
+        }
     });
 }
 

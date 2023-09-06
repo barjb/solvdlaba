@@ -1,16 +1,16 @@
 function chainPromises(array) {
     return new Promise((resolve, reject) => {
         let result = "";
-        array.forEach((promise, index) => {
+        for (const [index, promise] of array.entries()) {
             promise(result)
                 .then((value) => {
                     result = result.concat(value);
-                    if (index == arr.length - 1) resolve(result);
+                    if (index === array.length - 1) resolve(result);
                 })
                 .catch((error) => {
                     reject(error);
                 });
-        });
+        }
     });
 }
 
