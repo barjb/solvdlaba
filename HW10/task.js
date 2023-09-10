@@ -108,11 +108,12 @@ class User {
     #name;
     #email;
     #id;
+    static #userid = 0;
     // primitive types passed to the constructor
-    constructor(name, email, id) {
+    constructor(name, email) {
         this.#name = name;
         this.#email = email;
-        this.#id = id;
+        this.#id = User.#userid++;
     }
     // getters
     get name() {
@@ -131,7 +132,6 @@ class Cart {
     #cart;
     #user;
     constructor(user) {
-        if (!(user instanceof User)) return {};
         this.#user = user;
         this.#cart = [];
     }
@@ -163,7 +163,6 @@ class Order {
     #user;
     #cart;
     constructor(user, cart) {
-        if (!(user instanceof User) || !(cart instanceof Cart)) return {};
         this.#user = user;
         this.#cart = cart;
     }
@@ -235,9 +234,11 @@ const books = [
 ];
 
 // User objects are created from primitive types.
-const john = new User("john", "john@gmail.com", 1);
-const kate = new User("kate", "kate@gmail.com", 2);
-const jane = new User("jane", "jane@gmail.com", 3);
+const john = new User("john", "john@gmail.com");
+const kate = new User("kate", "kate@gmail.com");
+const jane = new User("jane", "jane@gmail.com");
+
+console.log(john.id, kate.id, jane.id);
 
 // Each cart has assigned owner.
 const cart1 = new Cart(john);
